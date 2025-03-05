@@ -1,63 +1,52 @@
-class LinkedListItem:
-    """Узел связного списка"""
-
-    def __init__(self, data, prev=None, next=None):
-        self.__data = data
-        self.__prev = prev
-        self.__next = next
-
-    @property
-    def next_item(self):
-        """Следующий элемент"""
-        return self.__next
-
-    @next_item.setter
-    def next_item(self, value):
-        self.__next = value
-
-    @property
-    def previous_item(self):
-        """Предыдущий элемент"""
-        return self.__prev
-
-    @previous_item.setter
-    def previous_item(self, value):
-        self.__prev = value
-
-    def __repr__(self):
-        return f"{self}"
+from linked_list_item import LinkedListItem
 
 
 class LinkedList:
     """Связный список"""
 
-    def __init__(self, first_item=None, tail=None, ptr=None):
-        self.first_item = self.tail = self.ptr = None
+    def __init__(self):
+        self.head = self.tail = None
         self.count = 0
-        self.left = None
-        self.right = None
 
     @property
     def last(self):
         """Последний элемент"""
-        raise NotImplementedError()
+        if len(self) == 0:
+            return None
+        return self.tail
 
     def append_left(self, item):
-        """Добавление слева"""
-        raise NotImplementedError()
+        """Добавление элемента в начало списка"""
+        ptr = LinkedListItem(item)
+        if len(self) == 0:
+            self.head = ptr
+            self.tail = ptr
+            self.head.next = self.head
+            self.head.prev = self.head
+            return
+        else:
+            ptr.next = self.head
+            ptr.prev = self.tail
+            self.head.prev = ptr
+            self.tail.next = ptr
+            self.head = ptr
+        self.count += 1
 
     def append_right(self, item):
-        """Добавление справа"""
-        if self.first_item is None:
-            self.first_item = item
-            self.tail = item
-            self.count += 1
+        """Добавление элемента в конец списка"""
+        ptr = LinkedListItem(item)
+        if len(self) == 0:
+            self.head = ptr
+            self.tail = ptr
+            self.head.next = self.head
+            self.head.prev = self.head
         else:
-            self.ptr = item
-            self.tail.next_item = self.ptr
-            self.ptr.previous_item = self.tail
-            self.tail = self.ptr
-            self.count += 1
+            self.tail.next = ptr
+            ptr.prev = self.tail
+            self.tail = ptr
+            self.tail.next = self.head
+            self.head.prev = self.tail
+        self.count += 1
 
     def append(self, item):
         """Добавление справа"""
@@ -65,11 +54,38 @@ class LinkedList:
 
     def remove(self, item):
         """Удаление"""
-        raise NotImplementedError()
+        if self.count == 0:
+            raise ValueError("Список пуст")
+        ptr = self.head
+        while True:
+            if ptr.data == item:
+                if ptr == self.head:
+                    ptr = self.head.next
+                    ptr.prev = self.tail
+                    self.tail.next = ptr
+                    self.head = ptr
+                elif ptr == self.tail:
+                    ptr = self.tail.prev
+                    ptr.next = self.head
+                    self.tail = ptr
+                else:
+                    left = ptr.prev
+                    right = ptr.next
+                    left.next = right
+                    right.prev = left
+                self.count -= 1
+                return
+            ptr = ptr.next
+        raise ValueError("Элемент не найден")
 
     def insert(self, previous, item):
         """Вставка справа"""
-        raise NotImplementedError()
+        ptr = LinkedListItem(item)
+        right = previous.next
+        previous.next = ptr
+        ptr.prev = previous
+        right.prev = ptr
+        ptr.next = right
 
     def __len__(self):
         return self.count
@@ -84,4 +100,13 @@ class LinkedList:
         raise NotImplementedError()
 
     def __reversed__(self):
-        raise NotImplementedError()
+        if len(self) == 0:
+            return []
+        reversed_list = []
+        last = self.tail
+        while True:
+            reversed_list.append(last.data)
+            if last == self.head:
+                break
+            last = last.prev
+        return reversed_list

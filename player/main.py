@@ -1,19 +1,13 @@
 import sys
-from PyQt5.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QPushButton,
-    QListWidget,
-    QVBoxLayout,
-    QWidget,
-    QFileDialog,
-    QLabel,
-    QHBoxLayout,
-    QInputDialog,
-    QMessageBox,
+from PyQt5.QtWidgets import ( QApplication, QMainWindow, QPushButton, 
+QListWidget, QVBoxLayout, QWidget, QFileDialog, QLabel, QHBoxLayout, 
+QInputDialog, QMessageBox
 )
 from PyQt5 import QtCore
 import pygame
+from music_track import MusicTrack
+from PlayList import Playlist
+
 
 from player.PlayList import Playlist
 
