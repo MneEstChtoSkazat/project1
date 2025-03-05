@@ -16,8 +16,6 @@ class PlaylistUI(QMainWindow):
         self.playlist = {}
         self.curent_playlist = None
         self.initUI()
-        self.setWindowTitle("Music Playlist Manager")
-        self.setGeometry(700, 600, 500, 500)
 
     def initUI(self):
         self.setWindowTitle("Music Playlist Manager")
@@ -95,16 +93,20 @@ class PlaylistUI(QMainWindow):
         def create_playlist(self):
             """Создание нового плейлиста."""
             name, ok = QInputDialog.getText(
-                self, "Создать плейлист", "Введите название:"
-            )
+                self, "Создать плейлист", "Введите название:")
             if ok and name:
-                new_playlist = Playlist()
-                self.playlist[name] = new_playlist
-                print(f"Плейлист '{name}' создан и выбран.")
+                if name in self.playlists:
+                    self.show_error_message(f"Плейлист с именем '{name}' уже существует.")
+                else:
+                    new_playlist = Playlist()
+                    self.playlist[name] = new_playlist
+                    print(f"Плейлист '{name}' создан и выбран.")
+            else:
+                self.show_error_message("Введите корректное название плейлиста.")
 
         def select_playlist(self):
             """Выбор текущего плейлиста из списка и обновление списка треков."""
-
+            select_playlist_item = select_playlist.curre
         def delete_playlist(self):
             """Удаление выбранного плейлиста."""
 

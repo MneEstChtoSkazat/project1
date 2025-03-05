@@ -8,8 +8,7 @@ from music_track import MusicTrack
 class Playlist(LinkedList):
     def __init__(self, data=None):
         super().__init__(data)
-        self.current_playlist = None
-        self.playlists = {}
+        self._current = None
 
     def play_all(self, track):
         self._current = track
