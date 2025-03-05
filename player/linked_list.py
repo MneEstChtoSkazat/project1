@@ -73,7 +73,6 @@ class LinkedList:
                     right = ptr.next
                     left.next = right
                     right.prev = left
-                self.count -= 1
                 return
             ptr = ptr.next
         raise ValueError("Элемент не найден")
@@ -88,7 +87,16 @@ class LinkedList:
         ptr.next = right
 
     def __len__(self):
-        return self.count
+        if not self.head:
+            return 0
+        cout = 0
+        ptr = self.head
+        while True:
+            cout += 1
+            ptr = ptr.next
+            if ptr == self.tail:
+                break
+        return cout
 
     def __iter__(self):
         raise NotImplementedError()
