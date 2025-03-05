@@ -8,10 +8,6 @@ import pygame
 from music_track import MusicTrack
 from PlayList import Playlist
 
-
-from player.PlayList import Playlist
-
-
 class PlaylistUI(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -98,7 +94,9 @@ class PlaylistUI(QMainWindow):
 
         def create_playlist(self):
             """Создание нового плейлиста."""
-            name, ok = QInputDialog.getText(self, 'Создать плейлист', 'Введите название:')
+            name, ok = QInputDialog.getText(
+                self, "Создать плейлист", "Введите название:"
+            )
             if ok and name:
                 new_playlist = Playlist()
                 self.playlist[name] = new_playlist
@@ -121,12 +119,12 @@ class PlaylistUI(QMainWindow):
 
         def play_current_track(self):
             """Проигрывание текущего трека."""
-            
 
         def next_track(self):
             """Воспроизведение следующего трека."""
             self.current_playlist.next_track()
             self.pl
+
         def previous_track(self):
             """Воспроизведение предыдущего трека."""
             self.current_playlist.previous_track()

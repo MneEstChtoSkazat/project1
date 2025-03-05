@@ -87,22 +87,16 @@ class LinkedList:
         ptr.next = right
 
     def __len__(self):
-        if not self.head:
-            return 0
-        cout = 0
-        ptr = self.head
-        while True:
-            cout += 1
-            ptr = ptr.next
-            if ptr == self.tail:
-                break
-        return cout
+        return sum(1 for i in self)
 
     def __iter__(self):
-        raise NotImplementedError()
+        h = self.head
+        while h:
+            yield h
+            h = h.next
 
     def __getitem__(self, index):
-        raise NotImplementedError()
+        return self._get_obj(index)
 
     def __contains__(self, item):
         raise NotImplementedError()
@@ -118,3 +112,9 @@ class LinkedList:
                 break
             last = last.prev
         return reversed_list
+
+    def _get_obj(self, indx):
+        if not(isinstance(indx, int)) or not (0 <= indx < len(self)):
+            for i, obj in enumerate(self):
+                if i == obj:
+                    return obj
