@@ -1,0 +1,2 @@
+class MusicTrack: 
+    pass
