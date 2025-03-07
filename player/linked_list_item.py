@@ -22,5 +22,13 @@ class LinkedListItem:
     def prev(self, value):
         self.__prev = value
 
+    @property
+    def data(self):
+        return self.__data
+
+    @data.setter
+    def data(self, value):
+        self.__data = value
+
     def __repr__(self):
-        return f"Linked List Item, data: {self.data}" 
+        return f"Linked List Item, data: {self.data}"

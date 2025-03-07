@@ -1,12 +1,14 @@
+"""Linked Ring List"""
+
+from tkinter import NO
 from linked_list_item import LinkedListItem
 
 
 class LinkedList:
     """Связный список"""
 
-    def __init__(self):
-        self.head = self.tail = None
-        self.count = 0
+    def __init__(self, head=None):
+        self.head = head
 
     @property
     def last(self):
@@ -30,7 +32,6 @@ class LinkedList:
             self.head.prev = ptr
             self.tail.next = ptr
             self.head = ptr
-        self.count += 1
 
     def append_right(self, item):
         """Добавление элемента в конец списка"""
@@ -46,18 +47,17 @@ class LinkedList:
             self.tail = ptr
             self.tail.next = self.head
             self.head.prev = self.tail
-        self.count += 1
 
     def append(self, item):
-        """Добавление справа"""
-        raise NotImplementedError()
+        """Элиас для append_right"""
+        self.append_right(item)
 
     def remove(self, item):
         """Удаление"""
-        if self.count == 0:
+        if self.head is None:
             raise ValueError("Список пуст")
         ptr = self.head
-        while True:
+        while ptr:
             if ptr.data == item:
                 if ptr == self.head:
                     ptr = self.head.next
@@ -87,19 +87,41 @@ class LinkedList:
         ptr.next = right
 
     def __len__(self):
-        return sum(1 for i in self)
+        count = 0
+        ptr = self.head
+        if ptr is None:
+            return 0
+        while True:
+            count+=1
+            ptr = ptr.next
+            if ptr == self.head:
+                break
+        return ptr
 
     def __iter__(self):
-        h = self.head
-        while h:
-            yield h
-            h = h.next
+        if not self.head:
+            return
+        ptr = self.head
+        while True:
+            yield ptr
+            ptr = ptr.next
+            if ptr == self.head:
+                break
 
     def __getitem__(self, index):
         return self._get_obj(index)
 
     def __contains__(self, item):
-        raise NotImplementedError()
+        if not self.head:
+            return False
+
+        ptr = self.head
+        while True:
+            if ptr.data == item:
+                return True
+            ptr = ptr.next
+            if ptr == self.first_node:
+                return False
 
     def __reversed__(self):
         if len(self) == 0:
@@ -114,7 +136,7 @@ class LinkedList:
         return reversed_list
 
     def _get_obj(self, indx):
-        if not(isinstance(indx, int)) or not (0 <= indx < len(self)):
+        if not (isinstance(indx, int)) or not (0 <= indx < len(self)):
             for i, obj in enumerate(self):
                 if i == obj:
                     return obj

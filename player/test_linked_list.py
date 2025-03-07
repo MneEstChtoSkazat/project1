@@ -276,3 +276,4 @@ class TestLinkedList(unittest.TestCase):
                     [item for item in reversed(linked_list)],
                     list(range(i - 1, -1, -1))
                 )
+

@@ -10,12 +10,12 @@ class Playlist(LinkedList):
         super().__init__(data)
         self._current = None
 
-    def play_all(self, track):
+    def play_all(self, track) :
         self._current = track
         pygame.mixer.music.load(self.current.path)
         pygame.mixer.music.play()
 
-    def next_track(self):
+    def next_track(self) -> MusicTrack:
         if self._current:
             self.play_all(self._current.next)
 
