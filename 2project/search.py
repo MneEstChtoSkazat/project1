@@ -1,34 +1,14 @@
 # Алгоритм Кнута-Морриса-Пратта
-def kmp(string: str, substring: str):
-    len_substring, len_string = len(substring), len(string)
-
-    p = [0] * len_substring
-
-    i = 0
-    j = 0   
-    while i < n:
-        if a[i] == t[j]:
-            i += 1
-            j += 1
-            if j == m:
-                print("образ найден")
-                break
-        else:
-            if j > 0:
-                j = p[j-1]
-            else:
-                i += 1
-
-    if i == n and j != m:
-        print("образ не найден")
+from tkinter import N
 
 
-def lps(substring, p):
-    j = 0
+def longest_prefix(substring):
     i = 1
+    j = 0
 
+    p = [0] * len(substring)
     while i < len(substring):
-        if substring[j] == substring[i]:
+        if substring[i] == substring[j]:
             p[i] = j + 1
             i += 1
             j += 1
@@ -38,6 +18,34 @@ def lps(substring, p):
                 i += 1
             else:
                 j = p[j - 1]
+    return p
+
+
+def kmp(string, substring):
+    len_str, len_sub_str = len(string), len(substring)
+    i = 0
+    j = 0
+    indices = []
+    p = longest_prefix(substring)
+    while i < len_str:
+        if string[i] == substring[j]:
+            i += 1
+            j += 1
+            if j == len_sub_str:
+                indices.append(i - j)
+                j = p[j - 1]
+
+        else:
+            if j > 0:
+                j = p[j - 1]
+            else:
+                i += 1
+    if indices:
+        return tuple(indices):
+    return None
+
+
+print(kmp("лилила лалалали", "лали"))
 
 
 def boyer_moore_horspool_search(text, pattern):
@@ -96,9 +104,3 @@ def boyer_moore_horspool_search(text, pattern):
             print("образ не найден")
     else:
         print("образ не найден")
-
-
-string = "ABABDABACDABABCABAB"
-substring = "ABABCABAB"
-result = kmp(string, substring)
-print(f"Вхождения найдены на позициях: {result}")
