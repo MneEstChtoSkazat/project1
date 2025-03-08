@@ -1,5 +1,4 @@
 # Алгоритм Кнута-Морриса-Пратта
-from tkinter import N
 
 
 def longest_prefix(substring):
@@ -41,11 +40,8 @@ def kmp(string, substring):
             else:
                 i += 1
     if indices:
-        return tuple(indices):
+        return tuple(indices)
     return None
-
-
-print(kmp("лилила лалалали", "лали"))
 
 
 def boyer_moore_horspool_search(text, pattern):
@@ -101,6 +97,6 @@ def boyer_moore_horspool_search(text, pattern):
                 print(f"образ найден по индексу {i - k + 1}")
                 break
         else:
-            print("образ не найден")
+            return None
     else:
-        print("образ не найден")
+        return None
