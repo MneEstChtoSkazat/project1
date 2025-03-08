@@ -5,7 +5,7 @@ class TrieNode:
     def __init__(self):
         self.children = {}
         self.isTerminal = False
-        self.fail = None
+        self.failure_links = None
         self.output = []
 
 
@@ -30,8 +30,6 @@ class Trie:
             curr = curr.children[i]
         return curr.isTerminal
 
-    def build_fail_links(self):
-        queue = deque()
-        self.root.fail = None  # Корень не имеет fail-ссылки
+
 
     
