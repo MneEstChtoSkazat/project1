@@ -12,12 +12,17 @@ from algorithms import (
 avalible_algorithms = ["kmp", "bm", "rk", "bmh", "ak"]
 
 
-def parser():
+def parser_arg():
     parser = argparse.ArgumentParser(
         description="Поиск подстрок в тексте с помошью различных алгоритмов"
     )
-    parser.add_argument("--string", type=str, help="Текст в котором будем искать")
-    parser.add_argument("--sub_string", type=str, help="Подстрока которую будем искать")
+    parser.add_argument(
+        "--string", type=str, nargs="+", help="Текст в котором будем искать"
+    )
+    parser.add_argument("--file", type=str, help="Путь к файлу в котором искать")
+    parser.add_argument(
+        "--sub_string", type=str, required=True, help="Подстрока которую будем искать"
+    )
     parser.add_argument(
         "--case_sensitivity", type=bool, help="Флаг чувствительности к регистру"
     )
@@ -26,15 +31,16 @@ def parser():
         type=str,
         choices=["first", "last"],
         default="first",
-        help="mетод поиска(по умолчанию в прямом порядке)",
+        help="Метод поиска(по умолчанию в прямом порядке)",
     )
     parser.add_argument(
-        "--algotithm",
+        "--algorithm",
         type=str,
-        help=f"Алгоритм для использования. Доступный {avalible_algorithms}",
+        required=True,
+        help=f"Алгоритм для использования. Доступны {avalible_algorithms}",
     )
     parser.add_argument(
-        "--count", type=int, help="количество совпадений, которые нужно найти"
+        "--count", type=int, help="Количество совпадений k, которые нужно найти"
     )
     return parser.parse_args()
 
@@ -63,7 +69,7 @@ def search(
                 indx = boyer_moore_search(string, sub_string)
             case "ak":
                 indx = aho_corasick_search(string, sub_string)
-        if indx == None:
+        if indx is None:
             return None
     elif method == "last":
         match algorithm:
@@ -77,32 +83,33 @@ def search(
                 indx = boyer_moore_horspool_search(string[::-1], sub_string[::-1])
             case "ak":
                 indx = aho_corasick_search(string[::-1], sub_string[::-1])
-
-        if indx == None:
+        if indx is None:
             return None
+        result[sub] = indx
     else:
         raise ValueError(f"Метода {method} не существует")
 
-    def read_file(x):
-        try:
-            with open(x, "r") as f:
-                return f.read()
-        except FileNotFoundError:
-            print(f"Ошибка: файл '{x}' не найден.")
-            return None
+
+def read_file(file_path):
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        print(f"Ошибка: файл '{file_path}' не найден.")
+        return None
 
 
 if __name__ == "__main__":
-    args = parser()
+    args = parser_arg()
     if args.file:
         string = read_file(args.file)
     elif args.string:
         string = args.string
     else:
-        raise ValueError(" ")
+        raise ValueError("--string or --file.")
     result = search(
         string,
-        args.substring,
+        args.sub_string,
         case_sensitivity=args.case_sensitive,
         method=args.method,
         count=args.count,
