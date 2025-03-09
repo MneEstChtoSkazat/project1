@@ -12,16 +12,18 @@ from algorithms import (
 avalible_algorithms = ["kmp", "bm", "rk", "bmh", "ak"]
 
 
-def parser_arg():
+def parser_args():
     parser = argparse.ArgumentParser(
         description="Поиск подстрок в тексте с помошью различных алгоритмов"
     )
-    parser.add_argument(
-        "--string", type=str, nargs="+", help="Текст в котором будем искать"
-    )
+    parser.add_argument("--string", type=str, help="Текст в котором будем искать")
     parser.add_argument("--file", type=str, help="Путь к файлу в котором искать")
     parser.add_argument(
-        "--sub_string", type=str, required=True, help="Подстрока которую будем искать"
+        "--sub_string",
+        type=str,
+        required=True,
+        nargs="+",
+        help="Подстрока которую будем искать",
     )
     parser.add_argument(
         "--case_sensitivity", type=bool, help="Флаг чувствительности к регистру"
@@ -55,8 +57,15 @@ def search(
 ) -> Optional[Union[tuple[int, ...], dict[str, tuple[int, ...]]]]:
     if algorithm not in avalible_algorithms:
         raise ValueError("Недоступный алгоритм")
+    if len(sub_string) == 1:
+        sub_string = str(sub_string)
     if not case_sensitivity:
         string = string.lower()
+        if isinstance(sub_string, list):
+            sub_string = [i.lower() for i in sub_string]
+        else:
+            sub_string = sub_string.lower()
+    result = {}
     if method == "first":
         match algorithm:
             case "kmp":
@@ -71,6 +80,7 @@ def search(
                 indx = aho_corasick_search(string, sub_string)
         if indx is None:
             return None
+        result[sub_string] = indx
     elif method == "last":
         match algorithm:
             case "kmp":
@@ -85,9 +95,11 @@ def search(
                 indx = aho_corasick_search(string[::-1], sub_string[::-1])
         if indx is None:
             return None
-        result[sub] = indx
+        result[sub_string] = indx
+
     else:
         raise ValueError(f"Метода {method} не существует")
+    return result
 
 
 def read_file(file_path):
@@ -100,22 +112,25 @@ def read_file(file_path):
 
 
 if __name__ == "__main__":
-    args = parser_arg()
+    args = parser_args()
     if args.file:
         string = read_file(args.file)
     elif args.string:
         string = args.string
     else:
-        raise ValueError("--string or --file.")
+        raise ValueError("Должег быть передан --string или --file.")
     result = search(
         string,
         args.sub_string,
-        case_sensitivity=args.case_sensitive,
+        case_sensitivity=args.case_sensitivity,
         method=args.method,
-        count=args.count,
         algorithm=args.algorithm,
+        count=args.count,
     )
     if result:
-        for sub in result.items():
-            print(f"Подстрока {sub} найдена на позиции(ях) {result}")
-    print("Не найдено")
+        for sub, indx in result.items():
+            print(
+                f"Подстрока {sub} найдена на {'позиции' if len(indx) == 1 else 'позициях'} {indx}"
+            )
+    else:
+        print("Не найдено")

@@ -39,10 +39,9 @@ def kmp(string, substring):
                 j = p[j - 1]
             else:
                 i += 1
-    if indices:
-        return tuple(indices)
-    return None
-
+    if indices == 0:
+        return None
+    return tuple(indices)
 
 def boyer_moore_horspool_search(text, pattern):
     t = text
