@@ -1,6 +1,5 @@
 """Linked Ring List"""
 
-from tkinter import NO
 from linked_list_item import LinkedListItem
 
 
@@ -9,6 +8,7 @@ class LinkedList:
 
     def __init__(self, head=None):
         self.head = head
+        self.tail = None
 
     @property
     def last(self):
@@ -25,7 +25,6 @@ class LinkedList:
             self.tail = ptr
             self.head.next = self.head
             self.head.prev = self.head
-            return
         else:
             ptr.next = self.head
             ptr.prev = self.tail
@@ -53,21 +52,24 @@ class LinkedList:
         self.append_right(item)
 
     def remove(self, item):
-        """Удаление"""
         if self.head is None:
             raise ValueError("Список пуст")
+
         ptr = self.head
-        while ptr:
+        while True:
             if ptr.data == item:
                 if ptr == self.head:
-                    ptr = self.head.next
-                    ptr.prev = self.tail
-                    self.tail.next = ptr
-                    self.head = ptr
+                    if len(self) == 1:
+                        self.head = None
+                        self.tail = None
+                    else:
+                        self.head = self.head.next
+                        self.head.prev = self.tail
+                        self.tail.next = self.head
                 elif ptr == self.tail:
-                    ptr = self.tail.prev
-                    ptr.next = self.head
-                    self.tail = ptr
+                    self.tail = self.tail.prev
+                    self.tail.next = self.head
+                    self.head.prev = self.tail
                 else:
                     left = ptr.prev
                     right = ptr.next
@@ -75,10 +77,14 @@ class LinkedList:
                     right.prev = left
                 return
             ptr = ptr.next
+            if ptr == self.head:
+                break
         raise ValueError("Элемент не найден")
 
     def insert(self, previous, item):
         """Вставка справа"""
+        if previous not in self:
+            raise ValueError("Не найдено значение previous")
         ptr = LinkedListItem(item)
         right = previous.next
         previous.next = ptr
@@ -92,11 +98,11 @@ class LinkedList:
         if ptr is None:
             return 0
         while True:
-            count+=1
+            count += 1
             ptr = ptr.next
             if ptr == self.head:
                 break
-        return ptr
+        return count
 
     def __iter__(self):
         if not self.head:
@@ -120,7 +126,7 @@ class LinkedList:
             if ptr.data == item:
                 return True
             ptr = ptr.next
-            if ptr == self.first_node:
+            if ptr == self.head:
                 return False
 
     def __reversed__(self):

@@ -8,6 +8,7 @@ import pygame
 from music_track import MusicTrack
 from PlayList import Playlist
 
+
 class PlaylistUI(QMainWindow):
     def __init__(self):
         super().__init__()

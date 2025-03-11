@@ -9,7 +9,7 @@
             "console": "integratedTerminal",
             "args": [
                 "--string", "Hello world! Hello everyone!",
-                "--sub_string", "Hello",
+                "--sub_string", "hello", "eve",
                 "--algorithm", "kmp"
             ]
         }
